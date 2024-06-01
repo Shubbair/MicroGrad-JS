@@ -102,6 +102,8 @@ class OperationParser {
     result.label = left;
     result.op = func;
     this.variables[left] = result;
+    // create new value
+    // set it data the function n.tanh(); without an argument!
   }
 
   handleOperation(left, right) {
@@ -157,10 +159,10 @@ class OperationParser {
               }[value.op];
         if (value.op === "relu" || value.op === "tanh") {
           const args =
-            value.childs.length > 1
-              ? `, ${value.childs[0].label || value.childs[0].data}`
+            method === "leaky_relu" && value.childs.length > 1
+              ? `, ${value.childs[1].label || value.childs[1].data}`
               : "";
-          result += `${key} =${method}(${args});\n`;
+          result += `${key} = ${value.childs[0].label}.${method}(${args});\n`;
         } else {
           result += `${key} = ${value.childs[0].label || value.childs[0].data}.${method}(${value.childs[1].label || value.childs[1].data});\n`;
         }
