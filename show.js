@@ -94,13 +94,14 @@ class OperationParser {
     const args = operand ? operand.split(",").map((arg) => arg.trim()) : [];
     const value = this.getValue(
       args[0] || right.split("(")[1].split(")")[0].trim(),
-      "",
+      args[0],
     );
+    console.log("Left : ", left, "Right : ", right);
+    console.log("func : ", func, "operand : ", operand);
     const result = value[func](...args.slice(1));
     result.label = left;
     result.op = func;
     this.variables[left] = result;
-    console.log("Result : ", result);
   }
 
   handleOperation(left, right) {
@@ -154,12 +155,12 @@ class OperationParser {
                 "/": "div",
                 "^": "pow",
               }[value.op];
-        console.log("OP : ", value.op);
         if (value.op === "relu" || value.op === "tanh") {
-          console.log("func value : ", value);
-          console.log("func method : ", method);
-          const args = `${value.childs.data}`;
-          result += `${key} = ${value.childs[0].label || value.childs[0].data}.${method}(${args});\n`;
+          const args =
+            value.childs.length > 1
+              ? `, ${value.childs[0].label || value.childs[0].data}`
+              : "";
+          result += `${key} =${method}(${args});\n`;
         } else {
           result += `${key} = ${value.childs[0].label || value.childs[0].data}.${method}(${value.childs[1].label || value.childs[1].data});\n`;
         }
