@@ -36,6 +36,14 @@ class Value {
     }
   }
 
+  div(other) {
+    if (other instanceof Value) {
+      return new Value(this.data / other.data, "", [this, other], "/");
+    } else {
+      return new Value(this.data / other, "", [this, new Value(other)], "/");
+    }
+  }
+
   pow(other) {
     if (other instanceof Value) {
       return new Value(Math.pow(this.data, other.data), "", [this, other], "^");
@@ -51,17 +59,17 @@ class Value {
 
   relu() {
     const out = this.data < 0 ? 0 : this.data;
-    return new Value(out, "ReLU", "σ");
+    return new Value(out, "relu", [this], "relu");
   }
 
   tanh() {
     const out = Math.tanh(this.data);
-    return new Value(out, "Tanh", [this], "tanh");
+    return new Value(out, "tanh", [this], "tanh");
   }
 
   sigmoid() {
     const out = 1 / (1 + Math.exp(-this.data));
-    return new Value(out, "Sigmoid", "σ");
+    return new Value(out, "sigmoid", [this], "sigmoid");
   }
 }
 
@@ -79,42 +87,33 @@ class OperationParser {
 
     lines.forEach((line) => {
       let [left, right] = line.split("=").map((part) => part.trim());
-      if (right.includes("relu") || right.includes("tanh")) {
-        console.log(right);
+      if (right.includes(".")) {
         this.handleFunction(left, right);
       } else {
-        this.handleOperation(left, right);
+        this.handleAssignment(left, right);
       }
     });
   }
 
   handleFunction(left, right) {
-    const match = right.match(/(\w+)\(([^)]*)\)/);
-    const [, func, operand] = match;
-    const args = operand ? operand.split(",").map((arg) => arg.trim()) : [];
-    const value = this.getValue(
-      args[0] || right.split("(")[1].split(")")[0].trim(),
-      args[0],
-    );
-    console.log("Left : ", left, "Right : ", right);
-    console.log("func : ", func, "operand : ", operand);
-    const result = value[func](...args.slice(1));
-    result.label = left;
-    result.op = func;
-    this.variables[left] = result;
-    // create new value
-    // set it data the function n.tanh(); without an argument!
+    const match = right.match(/(\w+)\.(\w+)\(([^)]*)\)/);
+    if (match) {
+      const [, variable, func] = match;
+      const value = this.getValue(variable.trim());
+      const result = value[func]();
+      result.label = left;
+      this.variables[left] = result;
+    } else {
+      throw new Error(`Invalid function syntax: ${right}`);
+    }
   }
 
-  handleOperation(left, right) {
+  handleAssignment(left, right) {
     const match = right.match(/(.+?)\s*([\+\-\*\/\^])\s*(.+)/);
     if (match) {
-      // if (this.variables[operand1] || this.variables[operand2]) {
-      // }
       const [, operand1, operator, operand2] = match;
-      const value1 = this.getValue(operand1.trim(), this.variables[operand1]);
-      const value2 = this.getValue(operand2.trim(), this.variables[operand2]);
-
+      const value1 = this.getValue(operand1.trim());
+      const value2 = this.getValue(operand2.trim());
       const methodMap = {
         "+": "add",
         "-": "sub",
@@ -123,23 +122,23 @@ class OperationParser {
         "^": "pow",
       };
       const method = methodMap[operator];
-      // make new Value class for the operator 1,2
       const result = value1[method](value2);
       result.label = left;
       this.variables[left] = result;
     } else {
-      const value = this.getValue(right, left);
+      const value = this.getValue(right);
+      value.label = left;
       this.variables[left] = value;
     }
   }
 
-  getValue(operand1, operand2) {
-    if (this.variables[operand1]) {
-      return this.variables[operand1];
-    } else if (!isNaN(operand1)) {
-      return new Value(parseFloat(operand1), operand2);
+  getValue(operand) {
+    if (this.variables[operand]) {
+      return this.variables[operand];
+    } else if (!isNaN(parseFloat(operand))) {
+      return new Value(parseFloat(operand), operand);
     } else {
-      throw new Error(`Undefined variable: ${operand1}`);
+      throw new Error(`Undefined variable: ${operand}`);
     }
   }
 
@@ -147,51 +146,36 @@ class OperationParser {
     let result = "";
     for (const [key, value] of Object.entries(this.variables)) {
       if (value.childs.length > 0) {
-        const method =
-          value.op === "relu" || value.op === "tanh"
-            ? value.op
-            : {
-                "+": "add",
-                "-": "sub",
-                "*": "mult",
-                "/": "div",
-                "^": "pow",
-              }[value.op];
-        if (value.op === "relu" || value.op === "tanh") {
-          const args =
-            method === "leaky_relu" && value.childs.length > 1
-              ? `, ${value.childs[1].label || value.childs[1].data}`
-              : "";
-          result += `${key} = ${value.childs[0].label}.${method}(${args});\n`;
+        const method = {
+          "+": "add",
+          "-": "sub",
+          "*": "mult",
+          "/": "div",
+          "^": "pow",
+        }[value.op];
+
+        if (
+          value.op === "relu" ||
+          value.op === "sigmoid" ||
+          value.op === "tanh"
+        ) {
+          result += `${key} = ${value.childs[0].label}.${value.op}();\n`;
         } else {
-          result += `${key} = ${value.childs[0].label || value.childs[0].data}.${method}(${value.childs[1].label || value.childs[1].data});\n`;
+          result += `${key} = ${value.childs[0].label}.${method}(${value.childs[1].label});\n`;
         }
       } else {
-        result += `${key} = new Value('${value.data}');\n`;
+        result += `${key} = new Value(${value.data});\n`;
       }
     }
     return result;
   }
 }
 
+// Example usage
 const code = `
 x = 1;
-y = relu(x);
+y = x.relu();
 `;
-
-// const code = `
-// x = 1;
-// y = 2;
-// z = x + y;
-// w = z + 1;
-// r = relu(w);
-// `;
-
-// v = w * 4;
-// u = v / 2;
-// t = u ^ 2;
-// r = relu(x);
-// m = 4 + t;
 
 const parser = new OperationParser(code);
 parser.parse();
