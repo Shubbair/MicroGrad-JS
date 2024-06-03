@@ -73,6 +73,8 @@ class Value {
   }
 }
 
+// change this code to make it work easily
+
 class OperationParser {
   constructor(code) {
     this.code = code;
@@ -144,6 +146,7 @@ class OperationParser {
 
   generateCode() {
     let result = "";
+    let codes = [];
     for (const [key, value] of Object.entries(this.variables)) {
       if (value.childs.length > 0) {
         const method = {
@@ -159,11 +162,16 @@ class OperationParser {
           value.op === "sigmoid" ||
           value.op === "tanh"
         ) {
+          var v = value.childs[0].label;
+          console.log(v);
+          // codes.push();
           result += `${key} = ${value.childs[0].label}.${value.op}();\n`;
         } else {
           result += `${key} = ${value.childs[0].label}.${method}(${value.childs[1].label});\n`;
         }
       } else {
+        const p = new Value(value.data);
+        console.log(p);
         result += `${key} = new Value(${value.data});\n`;
       }
     }
