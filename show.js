@@ -75,6 +75,8 @@ class Value {
 
 // change this code to make it work easily
 
+// var operations_code = [];
+
 class OperationParser {
   constructor(code) {
     this.code = code;
@@ -146,7 +148,6 @@ class OperationParser {
 
   generateCode() {
     let result = "";
-    let codes = [];
     for (const [key, value] of Object.entries(this.variables)) {
       if (value.childs.length > 0) {
         const method = {
