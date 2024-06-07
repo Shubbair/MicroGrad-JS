@@ -107,6 +107,7 @@ class OperationParser {
       const result = value[func]();
       result.label = left;
       this.variables[left] = result;
+      console.log("function are : ", result);
     } else {
       throw new Error(`Invalid function syntax: ${right}`);
     }
@@ -129,7 +130,7 @@ class OperationParser {
       const result = value1[method](value2);
       result.label = left;
       this.variables[left] = result;
-      console.log("function", result);
+      operations_code.push(result);
     } else {
       const value = this.getValue(right);
       value.label = left;
@@ -188,3 +189,5 @@ z = x + w;
 const parser = new OperationParser(code);
 parser.parse();
 // console.log(parser.generateCode());
+console.log(operations_code);
+console.log(operations_code.length);
