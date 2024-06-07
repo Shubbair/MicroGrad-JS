@@ -75,7 +75,7 @@ class Value {
 
 // change this code to make it work easily
 
-// var operations_code = [];
+var operations_code = [];
 
 class OperationParser {
   constructor(code) {
@@ -129,10 +129,12 @@ class OperationParser {
       const result = value1[method](value2);
       result.label = left;
       this.variables[left] = result;
+      console.log("function", result);
     } else {
       const value = this.getValue(right);
       value.label = left;
       this.variables[left] = value;
+      operations_code.push(value);
     }
   }
 
@@ -163,16 +165,11 @@ class OperationParser {
           value.op === "sigmoid" ||
           value.op === "tanh"
         ) {
-          var v = value.childs[0].label;
-          console.log(v);
-          // codes.push();
           result += `${key} = ${value.childs[0].label}.${value.op}();\n`;
         } else {
           result += `${key} = ${value.childs[0].label}.${method}(${value.childs[1].label});\n`;
         }
       } else {
-        const p = new Value(value.data);
-        console.log(p);
         result += `${key} = new Value(${value.data});\n`;
       }
     }
@@ -183,9 +180,11 @@ class OperationParser {
 // Example usage
 const code = `
 x = 1;
+w = 2;
 y = x.relu();
+z = x + w;
 `;
 
 const parser = new OperationParser(code);
 parser.parse();
-console.log(parser.generateCode());
+// console.log(parser.generateCode());
