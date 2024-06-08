@@ -45,59 +45,16 @@
                 return [nodes, edges];
             }
 
-            a = new Value(5.0);
-            a.label = "a";
-            b = new Value(2.0);
-            b.label = "b";
+            // a = new Value(5.0);
+            // a.label = "a";
+            // b = new Value(2.0);
+            // b.label = "b";
 
-            c = a.mult(b);
-            c.label = "c";
+            // c = a.mult(b);
+            // c.label = "c";
 
-            d = c.sub(b);
-            d.label = "d";
-
-            var [nodes, edges] = trace(d);
-
-            const nods = Array.from(nodes);
-            const edgs = Array.from(edges);
-
-            var vv = "",
-                pp = "",
-                dd = "",
-                counter = 0;
-
-            let dot = `digraph {
-                    graph [rankdir=LR];
-                    node [shape=record];
-                `;
-
-            for (let n of nodes) {
-                let uid = `node${n.label}`;
-                // Create node with label and data
-                dot += `"${uid}" [label=" ${n.label} | data ${n.data.toFixed(4)} | grad ${n.grad.toFixed(4)} "];\n`;
-                if (n.op) {
-                    // Create operation node
-                    let opId = `op${n.label}${n.op}`;
-                    dot += `"${opId}" [label="${n.op}", shape="circle"];\n`;
-                    // Connect operation node to value node
-                    dot += `"${opId}" -> "${uid}";\n`;
-                }
-            }
-
-            for (let [n1, n2] of edges) {
-                // Connect parent node to the operation node of the child node
-                let n1Id = `node${n1.label}`;
-                let n2OpId = `op${n2.label}${n2.op}`;
-                dot += `"${n1Id}" -> "${n2OpId}";\n`;
-            }
-
-            dot += `}`;
-
-            Viz.instance().then(function (viz) {
-                var svg = viz.renderSVGElement(dot);
-
-                document.getElementById("graph").appendChild(svg);
-            });
+            // d = c.sub(b);
+            // d.label = "d";
 
             var operations_code = [];
 
@@ -125,15 +82,17 @@
                     });
                 }
 
+                // issues with handling this function
                 handleFunction(left, right) {
                     const match = right.match(/(\w+)\.(\w+)\(([^)]*)\)/);
                     if (match) {
                         const [, variable, func] = match;
                         const value = this.getValue(variable.trim());
                         const result = value[func]();
+                        result.op = func;
                         result.label = left;
                         this.variables[left] = result;
-                        console.log("function are : ", result);
+                        operations_code.push(result);
                     } else {
                         throw new Error(`Invalid function syntax: ${right}`);
                     }
@@ -177,11 +136,56 @@
             }
 
             function show() {
+                operations_code = [];
+                document.getElementById("graph").innerHTML = "";
                 var text_code = document.getElementById("code").value;
                 const parser = new OperationParser(text_code);
                 parser.parse();
 
                 console.log(operations_code);
+
+                var [nodes, edges] = trace(operations_code.pop());
+
+                const nods = Array.from(nodes);
+                const edgs = Array.from(edges);
+
+                var vv = "",
+                    pp = "",
+                    dd = "",
+                    counter = 0;
+
+                let dot = `digraph {
+                        graph [rankdir=LR];
+                        node [shape=record];
+                    `;
+
+                for (let n of nodes) {
+                    let uid = `node${n.label}`;
+                    // Create node with label and data
+                    dot += `"${uid}" [label=" ${n.label} | data ${n.data.toFixed(4)} | grad ${n.grad.toFixed(4)} "];\n`;
+                    if (n.op) {
+                        // Create operation node
+                        let opId = `op${n.label}${n.op}`;
+                        dot += `"${opId}" [label="${n.op}", shape="circle"];\n`;
+                        // Connect operation node to value node
+                        dot += `"${opId}" -> "${uid}";\n`;
+                    }
+                }
+
+                for (let [n1, n2] of edges) {
+                    // Connect parent node to the operation node of the child node
+                    let n1Id = `node${n1.label}`;
+                    let n2OpId = `op${n2.label}${n2.op}`;
+                    dot += `"${n1Id}" -> "${n2OpId}";\n`;
+                }
+
+                dot += `}`;
+
+                Viz.instance().then(function (viz) {
+                    var svg = viz.renderSVGElement(dot);
+
+                    document.getElementById("graph").appendChild(svg);
+                });
             }
         </script>
     </body>

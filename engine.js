@@ -51,6 +51,6 @@ class Value {
 
   relu() {
     const out = this.data < 0 ? 0 : this.data;
-    return new Value(out, "ReLU", "σ");
+    return new Value(out, "relu", [this], "relu");
   }
 }
