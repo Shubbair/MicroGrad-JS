@@ -188,6 +188,5 @@ z = x + w;
 
 const parser = new OperationParser(code);
 parser.parse();
-// console.log(parser.generateCode());
+
 console.log(operations_code);
-console.log(operations_code.length);
