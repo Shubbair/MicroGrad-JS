@@ -2,7 +2,7 @@ body {
     background-color: #333644;
 }
 
-button {
+.draw {
     background-color: #c65f63;
     color: #fbf9fa;
     padding: 10px;
@@ -13,20 +13,30 @@ button {
     font-size: 18px;
 }
 
-#graph {
+.grad {
+    background-color: #f6e1b8;
+    color: #333644;
+    padding: 10px;
+    border: 0px;
+    border-radius: 10px;
+    width: 120px;
+    height: 50px;
+    font-size: 18px;
+}
+
+.graph {
+    margin-top: 2%;
+    margin-right: 2%;
     flex: 3;
     background-color: white;
-    width: 800px;
-    height: 600px;
+    height: 80vh;
     border: 1px solid rgb(152, 152, 152);
     border-radius: 8px;
+    overflow: scroll;
 }
 textarea {
     resize: none;
     border-radius: 8px;
-}
-.graph {
-    overflow: scroll;
 }
 
 .whole_area {
@@ -35,4 +45,9 @@ textarea {
 
 .code_area {
     flex: 1;
+    margin-left: 1%;
+}
+
+li {
+    margin-bottom: 8px;
 }
