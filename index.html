@@ -1,30 +1,27 @@
 <!doctype html>
 <html>
     <head>
-        <title>Graphviz.js Example</title>
-        <!-- <script src="vis.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis-network.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis-network.min.css" rel="stylesheet" type="text/css"> -->
-        <style>
-            #graph {
-                width: 800px;
-                height: 600px;
-                border: 1px solid rgb(152, 152, 152);
-            }
-            textarea {
-                resize: none;
-            }
-            .graph {
-                overflow: scroll;
-            }
-        </style>
-    </head>
-    <body>
-        <div id="graph" class="graph"></div>
-        <textarea id="code" rows="10" cols="60" resize="none"></textarea>
-        <button onclick="show()">Show</button>
+        <title>MicroGrad Visualization</title>
         <script src="viz-standalone.js"></script>
         <script src="engine.js"></script>
+        <link rel="stylesheet" type="text/css" href="style.css" />
+    </head>
+    <body>
+        <div class="whole_area">
+            <div class="code_area">
+                <h1 style="color:#c65f63;">Write Code Here...</h1>
+                <textarea id="code" rows="10" cols="32" resize="none"></textarea>
+                <button onclick="show()">Show</button>
+                <br></br>
+                <h2 style="color:#f6e1b8;">Rules : </h2>
+                <ul style="color:#f6e1b8;">
+                    <li>like Python statement, ex : x = 1; </li>
+                    <li>Must ends with ';'</li>
+                    <li>Activation functions are 'relu','sigmoid','tanh'</li>
+                </ul>
+            </div>
+            <div id="graph" class="graph"></div>
+        <div>
         <script>
             // function to get nodes and edges
             function trace(root) {

@@ -1,0 +1,38 @@
+body {
+    background-color: #333644;
+}
+
+button {
+    background-color: #c65f63;
+    color: #fbf9fa;
+    padding: 10px;
+    border: 0px;
+    border-radius: 10px;
+    width: 120px;
+    height: 50px;
+    font-size: 18px;
+}
+
+#graph {
+    flex: 3;
+    background-color: white;
+    width: 800px;
+    height: 600px;
+    border: 1px solid rgb(152, 152, 152);
+    border-radius: 8px;
+}
+textarea {
+    resize: none;
+    border-radius: 8px;
+}
+.graph {
+    overflow: scroll;
+}
+
+.whole_area {
+    display: flex;
+}
+
+.code_area {
+    flex: 1;
+}
