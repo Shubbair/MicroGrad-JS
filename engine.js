@@ -36,6 +36,14 @@ class Value {
     }
   }
 
+  div(other) {
+    if (other instanceof Value) {
+      return new Value(this.data / other.data, "", [this, other], "/");
+    } else {
+      return new Value(this.data / other, "", [this, new Value(other)], "/");
+    }
+  }
+
   pow(other) {
     if (other instanceof Value) {
       return new Value(Math.pow(this.data, other.data), "", [this, other], "^");
