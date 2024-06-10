@@ -1,7 +1,6 @@
 body {
     background-color: #333644;
-    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-        "Lucida Sans", Arial, sans-serif, Garamond, sans-serif;
+    font-family: Verdana, sans-serif;
 }
 
 .draw {
@@ -37,6 +36,9 @@ body {
     overflow: scroll;
 }
 textarea {
+    color: #333644;
+    outline: none;
+    text-indent: 6px;
     resize: none;
     border-radius: 8px;
 }
