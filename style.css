@@ -34,13 +34,13 @@ body {
     border: 1px solid rgb(152, 152, 152);
     border-radius: 8px;
     overflow: scroll;
+    scrollbar-color: #c65f63 #c65f63;
 }
 textarea {
     color: #333644;
     outline: none;
-    text-indent: 6px;
     resize: none;
-    border-radius: 8px;
+    border-radius: 4px;
 }
 
 .whole_area {
