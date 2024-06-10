@@ -19,7 +19,10 @@
                 <p>* Must ends with ';'</p>
                 <p>* Activation functions are 'relu','sigmoid','tanh'</p>
             </div>
+            <div class="presentation">
+            <h2 style="color:#62929a;">Graph Result</h2>
             <div id="graph" class="graph"></div>
+            </div>
         <div>
         <script>
             // function to get nodes and edges
@@ -89,31 +92,61 @@
                 }
 
                 // if there is airthmetic operations
+                // handleAssignment(left, right) {
+                //     const match = right.match(/(.+?)\s*([\+\-\*\/\^])\s*(.+)/);
+                //     if (match) {
+                //         const [, operand1, operator, operand2] = match;
+                //         const value1 = this.getValue(operand1.trim());
+                //         const value2 = this.getValue(operand2.trim());
+                //         const methodMap = {
+                //             "+": "add",
+                //             "-": "sub",
+                //             "*": "mult",
+                //             "/": "div",
+                //             "^": "pow",
+                //         };
+                //         const method = methodMap[operator];
+                //         const result = value1[method](value2);
+                //         result.label = left;
+                //         this.variables[left] = result;
+                //         operations_code.push(result);
+                //     } else {
+                //         const value = this.getValue(right);
+                //         value.label = left;
+                //         this.variables[left] = value;
+                //         operations_code.push(value);
+                //     }
+                // }
                 handleAssignment(left, right) {
-                    const match = right.match(/(.+?)\s*([\+\-\*\/\^])\s*(.+)/);
-                    if (match) {
-                        const [, operand1, operator, operand2] = match;
-                        const value1 = this.getValue(operand1.trim());
-                        const value2 = this.getValue(operand2.trim());
-                        const methodMap = {
-                            "+": "add",
-                            "-": "sub",
-                            "*": "mult",
-                            "/": "div",
-                            "^": "pow",
-                        };
-                        const method = methodMap[operator];
-                        const result = value1[method](value2);
-                        result.label = left;
-                        this.variables[left] = result;
-                        operations_code.push(result);
-                    } else {
-                        const value = this.getValue(right);
-                        value.label = left;
-                        this.variables[left] = value;
-                        operations_code.push(value);
-                    }
-                }
+                   const operators = /([\+\-\*\/\^])/;
+                   const parts = right.split(operators).map(part => part.trim());
+
+                   if (parts.length > 1) {
+                     let result = this.getValue(parts[0]);
+                     for (let i = 1; i < parts.length; i += 2) {
+                       const operator = parts[i];
+                       const nextValue = this.getValue(parts[i+1]);
+                       const methodMap = {
+                         "+": "add",
+                         "-": "sub",
+                         "*": "mult",
+                         "/": "div",
+                         "^": "pow",
+                       };
+                       const method = methodMap[operator];
+                       result = result[method](nextValue);
+                     }
+                     result.label = left;
+                     this.variables[left] = result;
+                     operations_code.push(result);
+                     console.log(result);
+                   } else {
+                     const value = this.getValue(right);
+                     value.label = left;
+                     this.variables[left] = value;
+                     operations_code.push(value);
+                   }
+                 }
 
                 // if the value not exist , create one
                 getValue(operand) {
@@ -154,8 +187,13 @@
 
                 for (let n of nodes) {
                     let uid = `node${n.label}`;
+                    if (n.label) {
+                      dot += `"${uid}" [label="{ ${n.label} | data ${n.data.toFixed(4)} | grad ${n.grad.toFixed(4)} }"];\n`;
+                    } else {
+                      dot += `"${uid}" [label="{ data ${n.data.toFixed(4)} | grad ${n.grad.toFixed(4)} }"];\n`;
+                    }
                     // Create node with label and data
-                    dot += `"${uid}" [label=" ${n.label} | data ${n.data.toFixed(4)} | grad ${n.grad.toFixed(4)} "];\n`;
+                    // dot += `"${uid}" [label=" ${n.label} | data ${n.data.toFixed(4)} | grad ${n.grad.toFixed(4)} "];\n`;
                     if (n.op) {
                         // Create operation node
                         let opId = `op${n.label}${n.op}`;
