@@ -1,5 +1,7 @@
 body {
     background-color: #333644;
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+        "Lucida Sans", Arial, sans-serif, Garamond, sans-serif;
 }
 
 .draw {
@@ -48,6 +50,6 @@ textarea {
     margin-left: 1%;
 }
 
-li {
-    margin-bottom: 8px;
+p {
+    color: #f6e1b8;
 }
