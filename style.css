@@ -20,10 +20,10 @@ body {
 }
 
 .grad {
-    background-color: #7a604b;
+    background-color: #4c6a96;
     color: #ececec;
     padding: 10px;
-    border: 3px solid #d0a380;
+    border: 3px solid #76a5eb;
     border-radius: 50px;
     width: 120px;
     height: 50px;
@@ -31,7 +31,7 @@ body {
 }
 
 .grad:hover {
-    background-color: #d0a380;
+    background-color: #76a5eb;
 }
 
 .graph {
@@ -55,6 +55,7 @@ body {
 }
 
 textarea {
+    text-indent: 5px;
     background-color: #2f2f2f;
     color: #ececec;
     outline: none;
