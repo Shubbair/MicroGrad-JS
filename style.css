@@ -1,37 +1,37 @@
 body {
-    background-color: #363434;
+    background-color: #212121;
     font-family: Verdana, sans-serif;
     overflow: none;
 }
 
 .draw {
-    background-color: #62929a;
+    background-color: #353634;
     color: #fbf9fa;
     padding: 10px;
-    border: 0px;
-    border-radius: 10px;
+    border: 3px solid #787878;
+    border-radius: 50px;
     width: 120px;
     height: 50px;
     font-size: 18px;
 }
 
 .draw:hover {
-    background-color: #4a6f76;
+    background-color: #787878;
 }
 
 .grad {
-    background-color: #ed733f;
-    color: #333644;
+    background-color: #7a604b;
+    color: #ececec;
     padding: 10px;
-    border: 0px;
-    border-radius: 10px;
+    border: 3px solid #d0a380;
+    border-radius: 50px;
     width: 120px;
     height: 50px;
     font-size: 18px;
 }
 
 .grad:hover {
-    background-color: #b6582f;
+    background-color: #d0a380;
 }
 
 .graph {
@@ -41,7 +41,7 @@ body {
     background-color: white;
     max-width: 950px;
     height: 50vh;
-    border: 2px solid #62929a;
+    border: 2px solid #787878;
     border-radius: 8px;
     overflow: scroll;
     scrollbar-color: #c65f63 #c65f63;
@@ -55,7 +55,8 @@ body {
 }
 
 textarea {
-    color: #333644;
+    background-color: #2f2f2f;
+    color: #ececec;
     outline: none;
     resize: none;
     border: 1px white;
@@ -73,5 +74,5 @@ textarea {
 }
 
 p {
-    color: #f6e1b8;
+    color: #e2c541;
 }
