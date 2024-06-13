@@ -10,20 +10,22 @@
         <div class="whole_area">
             <div class="code_area">
                 <h2 style="color:#b4b4b4;">Write Code Here...</h2>
-                <textarea placeholder="code..." id="code" rows="10" cols="28" resize="none"></textarea>
+                <textarea placeholder="code..." id="code" rows="14" cols="30" resize="none"></textarea>
                 <button class="draw" onclick="show()">Forward</button>
                 <button class="grad" onclick="back()">Backward</button>
                 <br></br>
-                <h2 style="color:#e2c541;">Rules : </h2>
-                <p>* like Python statement : "x = 1" </p>
-                <p>* Must ends with ';'</p>
-                <p>* Activation functions are 'relu','sigmoid','tanh'</p>
             </div>
             <div class="presentation">
-            <h2 style="color:#b4b4b4;">Graph Result</h2>
-            <div id="graph" class="graph"></div>
+                <h2 style="color:#b4b4b4;">Graph Result</h2>
+                <div id="graph" class="graph"></div>
             </div>
-        <div>
+        </div>
+        <div class="rule">
+            <h2 style="color:#e2c541;">Rules : </h2>
+            <p>* like Python statement : "x = 1" </p>
+            <p>* Must ends with ';'</p>
+            <p>* Activation functions are 'relu','sigmoid','tanh'</p>
+        </div>
         <script>
             // function to get nodes and edges
             function trace(root) {

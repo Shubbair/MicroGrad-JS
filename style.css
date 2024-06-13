@@ -5,12 +5,13 @@ body {
 }
 
 .draw {
+    margin-top: 5px;
     background-color: #353634;
     color: #fbf9fa;
     padding: 10px;
     border: 3px solid #787878;
-    border-radius: 50px;
-    width: 120px;
+    border-radius: 8px;
+    width: 150px;
     height: 50px;
     font-size: 18px;
 }
@@ -20,12 +21,13 @@ body {
 }
 
 .grad {
+    margin-top: 5px;
     background-color: #408a50;
     color: #ececec;
     padding: 10px;
     border: 3px solid #52b468;
-    border-radius: 50px;
-    width: 120px;
+    border-radius: 8px;
+    width: 150px;
     height: 50px;
     font-size: 18px;
 }
@@ -55,6 +57,8 @@ body {
 }
 
 textarea {
+    margin-right: 4px;
+    font-size: 16px;
     text-indent: 5px;
     background-color: #2f2f2f;
     color: #ececec;
@@ -76,4 +80,8 @@ textarea {
 
 p {
     color: #e2c541;
+}
+
+.rule {
+    margin-left: 20px;
 }
