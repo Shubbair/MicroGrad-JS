@@ -60,21 +60,20 @@
                 // parse the code and remove extra spaces
                 parse() {
                     const lines = this.code
-                        .split(";")
-                        .map((line) => line.trim())
-                        .filter((line) => line);
+                      .split(";")
+                      .map((line) => line.trim())
+                      .filter((line) => line);
 
                     lines.forEach((line) => {
-                        let [left, right] = line
-                            .split("=")
-                            .map((part) => part.trim());
-                        if (right.includes(".")) {
-                            this.handleFunction(left, right);
-                        } else {
-                            this.handleAssignment(left, right);
-                        }
+                      let [left, right] = line.split("=").map((part) => part.trim());
+                      if (/[\w]+\.[\w]+\(/.test(right)) {
+                        this.handleFunction(left, right);
+                      } else {
+                        this.handleAssignment(left, right);
+                      }
                     });
-                }
+                  }
+
 
                 // if the code consist activation function
                 // next step using only limited number of activations
@@ -93,38 +92,21 @@
                     }
                 }
 
-                // if there is airthmetic operations
-                // handleAssignment(left, right) {
-                //     const match = right.match(/(.+?)\s*([\+\-\*\/\^])\s*(.+)/);
-                //     if (match) {
-                //         const [, operand1, operator, operand2] = match;
-                //         const value1 = this.getValue(operand1.trim());
-                //         const value2 = this.getValue(operand2.trim());
-                //         const methodMap = {
-                //             "+": "add",
-                //             "-": "sub",
-                //             "*": "mult",
-                //             "/": "div",
-                //             "^": "pow",
-                //         };
-                //         const method = methodMap[operator];
-                //         const result = value1[method](value2);
-                //         result.label = left;
-                //         this.variables[left] = result;
-                //         operations_code.push(result);
-                //     } else {
-                //         const value = this.getValue(right);
-                //         value.label = left;
-                //         this.variables[left] = value;
-                //         operations_code.push(value);
-                //     }
-                // }
                 handleAssignment(left, right) {
-                   const operators = /([\+\-\*\/\^])/;
+                  const operators = /([+\-*/^])/;
                    const parts = right.split(operators).map(part => part.trim());
 
+
                    if (parts.length > 1) {
-                     let result = this.getValue(parts[0]);
+                     let result;
+                    if (parts[0] === "") {
+                      console.log(parts);
+                      result = this.getValue(parts[1]+parts[2]); // sign + value
+                      parts.splice(0, 2);
+                    } else {
+                      result = this.getValue(parts[0]);
+                    }
+                     // let result = this.getValue(parts[0]);
                      for (let i = 1; i < parts.length; i += 2) {
                        const operator = parts[i];
                        const nextValue = this.getValue(parts[i+1]);
