@@ -1,9 +1,9 @@
 # MicroGrad with Javascript
 following the MicroGrad By [Karpathy](https://github.com/karpathy/micrograd)
 
-to build : 
+to build :
 - [x] MicroGrad Library
-- [x] Website to show the arithmetic **Graph** and **Gradient** realtime
+- [x] Website to show the Arithmetic **Graph** and **Gradient** realtime
 
 
 <video src='assets/video.mov'></video>
