@@ -27,13 +27,13 @@ class Value {
     return out;
   }
 
-  sub(other) {
-    if (other instanceof Value) {
-      return new Value(this.data - other.data, "", [this, other], "-");
-    } else {
-      return new Value(this.data - other, "", [this, new Value(other)], "-");
-    }
-  }
+  // sub(other) {
+  //   if (other instanceof Value) {
+  //     return new Value(this.data - other.data, "", [this, other], "-");
+  //   } else {
+  //     return new Value(this.data - other, "", [this, new Value(other)], "-");
+  //   }
+  // }
 
   mult(other) {
     var out;
@@ -58,31 +58,58 @@ class Value {
   }
 
   pow(other) {
+    var out;
     if (other instanceof Value) {
-      return new Value(Math.pow(this.data, other.data), "", [this, other], "^");
+      out = new Value(Math.pow(this.data, other.data), "", [this, other], "^");
     } else {
-      return new Value(
+      out = new Value(
         Math.pow(this.data, other),
         "",
         [this, new Value(other)],
         "^",
       );
     }
+    out._backward = () => {
+      this.grad += other * Math.pow(this.data, other - 1) * out.grad;
+    };
+    return out;
+  }
+
+  neg() {
+    return this.mult(-1);
+  }
+
+  sub(other) {
+    return this.add(other.neg());
   }
 
   relu() {
-    const out = this.data < 0 ? 0 : this.data;
-    return new Value(out, "relu", [this], "relu");
+    var out = this.data < 0 ? 0 : this.data;
+    out = new Value(out, "relu", [this], "relu");
+    out._backward = () => {
+      this.grad += (out.data > 0) * out.grad;
+    };
+    return out;
   }
 
   tanh() {
-    const out = Math.tanh(this.data);
-    return new Value(out, "tanh", [this], "tanh");
+    var out = Math.tanh(this.data);
+    out = new Value(out, "tanh", [this], "tanh");
+
+    out._backward = () => {
+      this.grad += (1 - Math.tanh(this.data) ** 2) * out.grad;
+    };
+    return out;
   }
 
   sigmoid() {
-    const out = 1 / (1 + Math.exp(-this.data));
-    return new Value(out, "sigmoid", [this], "sigmoid");
+    var sig = 1 / (1 + Math.exp(-this.data));
+    var out = new Value(sig, "sigmoid", [this], "sigmoid");
+    out._backward = () => {
+      const grad = sig * (1 - sig) * out.grad;
+      this.grad += grad;
+    };
+    return out;
   }
 
   backward() {
