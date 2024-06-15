@@ -78,10 +78,11 @@ textarea {
     margin-left: 1%;
 }
 
-p {
-    color: #e2c541;
+h2 {
+    color: #b4b4b4;
 }
 
 .rule {
     margin-left: 20px;
+    color: #e2c541;
 }

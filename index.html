@@ -9,19 +9,19 @@
     <body>
         <div class="whole_area">
             <div class="code_area">
-                <h2 style="color:#b4b4b4;">Write Code Here...</h2>
+                <h2>Write Code Here...</h2>
                 <textarea placeholder="code..." id="code" rows="14" cols="30" resize="none"></textarea>
                 <button class="draw" onclick="show()">Forward</button>
-                <button class="grad" onclick="back()">Backward</button>
+                <button class="grad" onclick="back()">AutoGrad</button>
                 <br></br>
             </div>
             <div class="presentation">
-                <h2 style="color:#b4b4b4;">Graph Result</h2>
+                <h2>Graph Result</h2>
                 <div id="graph" class="graph"></div>
             </div>
         </div>
         <div class="rule">
-            <h2 style="color:#e2c541;">Rules : </h2>
+            <h3>Rules : </h3>
             <p>* like Python statement : "x = 1" </p>
             <p>* Must ends with ';'</p>
             <p>* Activation functions are 'relu','sigmoid','tanh'</p>
@@ -141,7 +141,6 @@
                      result.label = left;
                      this.variables[left] = result;
                      operations_code.push(result);
-                     console.log(result);
                    } else {
                      const value = this.getValue(right);
                      value.label = left;
@@ -162,6 +161,46 @@
                 }
             }
 
+            function draw_graph(nodes,edges){
+              var vv = "",
+                  pp = "",
+                  dd = "",
+                  counter = 0;
+
+              let dot = `digraph {
+                      graph [rankdir=LR];
+                      node [shape=record];
+                  `;
+
+              for (let n of nodes) {
+                  let uid = `node${n.label}`;
+                  if (n.label) {
+                    dot += `"${uid}" [label="{ ${n.label} | data ${n.data.toFixed(4)} | grad ${n.grad.toFixed(4)} }"];\n`;
+                  } else {
+                    dot += `"${uid}" [label="{ data ${n.data.toFixed(4)} | grad ${n.grad.toFixed(4)} }"];\n`;
+                  }
+                  // Create node with label and data
+                  // dot += `"${uid}" [label=" ${n.label} | data ${n.data.toFixed(4)} | grad ${n.grad.toFixed(4)} "];\n`;
+                  if (n.op) {
+                      // Create operation node
+                      let opId = `op${n.label}${n.op}`;
+                      dot += `"${opId}" [label="${n.op}", shape="circle"];\n`;
+                      // Connect operation node to value node
+                      dot += `"${opId}" -> "${uid}";\n`;
+                  }
+              }
+
+              for (let [n1, n2] of edges) {
+                  // Connect parent node to the operation node of the child node
+                  let n1Id = `node${n1.label}`;
+                  let n2OpId = `op${n2.label}${n2.op}`;
+                  dot += `"${n1Id}" -> "${n2OpId}";\n`;
+              }
+
+              dot += `}`;
+              return dot;
+            }
+
             // after pressing the button
             function show() {
                 operations_code = [];
@@ -170,55 +209,44 @@
                 const parser = new OperationParser(text_code);
                 parser.parse();
 
-                console.log(operations_code);
+                var last_item = operations_code.pop();
 
-                var [nodes, edges] = trace(operations_code.pop());
+                var [nodes, edges] = trace(last_item);
 
                 const nods = Array.from(nodes);
                 const edgs = Array.from(edges);
 
-                var vv = "",
-                    pp = "",
-                    dd = "",
-                    counter = 0;
-
-                let dot = `digraph {
-                        graph [rankdir=LR];
-                        node [shape=record];
-                    `;
-
-                for (let n of nodes) {
-                    let uid = `node${n.label}`;
-                    if (n.label) {
-                      dot += `"${uid}" [label="{ ${n.label} | data ${n.data.toFixed(4)} | grad ${n.grad.toFixed(4)} }"];\n`;
-                    } else {
-                      dot += `"${uid}" [label="{ data ${n.data.toFixed(4)} | grad ${n.grad.toFixed(4)} }"];\n`;
-                    }
-                    // Create node with label and data
-                    // dot += `"${uid}" [label=" ${n.label} | data ${n.data.toFixed(4)} | grad ${n.grad.toFixed(4)} "];\n`;
-                    if (n.op) {
-                        // Create operation node
-                        let opId = `op${n.label}${n.op}`;
-                        dot += `"${opId}" [label="${n.op}", shape="circle"];\n`;
-                        // Connect operation node to value node
-                        dot += `"${opId}" -> "${uid}";\n`;
-                    }
-                }
-
-                for (let [n1, n2] of edges) {
-                    // Connect parent node to the operation node of the child node
-                    let n1Id = `node${n1.label}`;
-                    let n2OpId = `op${n2.label}${n2.op}`;
-                    dot += `"${n1Id}" -> "${n2OpId}";\n`;
-                }
-
-                dot += `}`;
+                dot = draw_graph(nods,edgs);
 
                 Viz.instance().then(function (viz) {
                     var svg = viz.renderSVGElement(dot);
 
                     document.getElementById("graph").appendChild(svg);
                 });
+            }
+
+            function back(){
+              operations_code = [];
+              document.getElementById("graph").innerHTML = "";
+              var text_code = document.getElementById("code").value;
+              const parser = new OperationParser(text_code);
+              parser.parse();
+
+              var last_item = operations_code.pop();
+              last_item.backward();
+
+              var [nodes, edges] = trace(last_item);
+
+              const nods = Array.from(nodes);
+              const edgs = Array.from(edges);
+
+              dot = draw_graph(nods,edgs);
+
+              Viz.instance().then(function (viz) {
+                  var svg = viz.renderSVGElement(dot);
+
+                  document.getElementById("graph").appendChild(svg);
+              });
             }
         </script>
     </body>
