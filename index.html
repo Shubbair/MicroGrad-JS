@@ -74,7 +74,6 @@
                     });
                   }
 
-
                 // if the code consist activation function
                 // next step using only limited number of activations
                 handleFunction(left, right) {
@@ -88,7 +87,7 @@
                         this.variables[left] = result;
                         operations_code.push(result);
                     } else {
-                        throw new Error(`Invalid function syntax: ${right}`);
+                        window.alert(`Invalid function syntax: ${right}`);
                     }
                 }
 
@@ -138,7 +137,7 @@
                     } else if (!isNaN(parseFloat(operand))) {
                         return new Value(parseFloat(operand), operand);
                     } else {
-                        throw new Error(`Undefined variable: ${operand}`);
+                        window.alert(`Undefined variable: ${operand}`);
                     }
                 }
             }
@@ -188,10 +187,39 @@
                 operations_code = [];
                 document.getElementById("graph").innerHTML = "";
                 var text_code = document.getElementById("code").value;
+                if(text_code !== ""){
+                  const parser = new OperationParser(text_code);
+                  parser.parse();
+
+                  var last_item = operations_code.pop();
+
+                  var [nodes, edges] = trace(last_item);
+
+                  const nods = Array.from(nodes);
+                  const edgs = Array.from(edges);
+
+                  dot = draw_graph(nods,edgs);
+
+                  Viz.instance().then(function (viz) {
+                      var svg = viz.renderSVGElement(dot);
+
+                      document.getElementById("graph").appendChild(svg);
+                  });
+              }else{
+                    window.alert('Please Write Some Code!');
+                  }
+            }
+
+            function back(){
+              operations_code = [];
+              document.getElementById("graph").innerHTML = "";
+              var text_code = document.getElementById("code").value;
+              if(text_code !== ""){
                 const parser = new OperationParser(text_code);
                 parser.parse();
 
                 var last_item = operations_code.pop();
+                last_item.backward();
 
                 var [nodes, edges] = trace(last_item);
 
@@ -205,30 +233,9 @@
 
                     document.getElementById("graph").appendChild(svg);
                 });
-            }
-
-            function back(){
-              operations_code = [];
-              document.getElementById("graph").innerHTML = "";
-              var text_code = document.getElementById("code").value;
-              const parser = new OperationParser(text_code);
-              parser.parse();
-
-              var last_item = operations_code.pop();
-              last_item.backward();
-
-              var [nodes, edges] = trace(last_item);
-
-              const nods = Array.from(nodes);
-              const edgs = Array.from(edges);
-
-              dot = draw_graph(nods,edgs);
-
-              Viz.instance().then(function (viz) {
-                  var svg = viz.renderSVGElement(dot);
-
-                  document.getElementById("graph").appendChild(svg);
-              });
+              }else{
+                window.alert('Please Write Some Code!');
+              }
             }
         </script>
     </body>
