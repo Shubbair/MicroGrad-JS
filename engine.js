@@ -27,14 +27,6 @@ class Value {
     return out;
   }
 
-  // sub(other) {
-  //   if (other instanceof Value) {
-  //     return new Value(this.data - other.data, "", [this, other], "-");
-  //   } else {
-  //     return new Value(this.data - other, "", [this, new Value(other)], "-");
-  //   }
-  // }
-
   mult(other) {
     var out;
     if (other instanceof Value) {
