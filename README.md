@@ -15,6 +15,6 @@ using :
 <br>
 
 More Example
-<img src="assets/EX1.png"/>
+<img src="assets/EX1.png" width="100"/>
 <img src="assets/EX2.png"/>
 <img src="assets/EX3.png"/>
