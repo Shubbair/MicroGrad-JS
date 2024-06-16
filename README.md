@@ -5,16 +5,19 @@ to build :
 - [x] MicroGrad Library
 - [x] Website to show the Arithmetic **Graph** and **Gradient** realtime
 
+Video Tutorial : 
 
-<video src='assets/video.mov'></video>
+https://github.com/Shubbair/MicroGrad-JS/assets/45163499/70ec4c84-d384-4dd6-8b72-4af04bfe26a1
 
 using :
 - Pure Javascript
 - Viz.js library to show graph
 
-<br>
+<br/>
 
-More Example
-<img src="assets/EX1.png" width="100"/>
-<img src="assets/EX2.png"/>
-<img src="assets/EX3.png"/>
+More Example : 
+
+|  |     |        |
+| ---    | ---   | ---     |
+| ![](assets/EX1.png) | ![](assets/EX2.png) |![](assets/EX3.png) |
+
