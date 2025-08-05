@@ -21,7 +21,5 @@ More Example :
 | ---    | ---   | ---     |
 | ![](assets/EX1.png) | ![](assets/EX2.png) |![](assets/EX3.png) |
 
-### Be Free to add some cool 😎 things
-
 # License : 
 MIT
